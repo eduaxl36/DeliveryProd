@@ -15,69 +15,45 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * @author eduardo
  */
 @ControllerAdvice
-public class FieldsValidationExceptionHandler extends ResponseEntityExceptionHandler   {
+public class FieldsValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
-    public ResponseEntity<Object> inputValidationException(ConstraintViolationException e) {
+	@ExceptionHandler(javax.validation.ConstraintViolationException.class)
+	public ResponseEntity<Object> inputValidationException(ConstraintViolationException ExcecaoMensagem) {
 
+		List<String> Motivos = new ArrayList();
+		List<String> Campos = new ArrayList();
 
-   
+		ExcecaoMensagem.getConstraintViolations().forEach(x -> {
 
+			x.getPropertyPath().forEach(name -> {
 
-                    List <String>InternalControlsReasonExceptions = new ArrayList();
-                    List <String>InternalControlNameExceptions = new ArrayList();
+				Motivos.add(x.getMessage());
+				Campos.add(name.getName());
 
+			});
 
+		});
 
-                    e.getConstraintViolations().forEach(x->{
+		return new ResponseEntity<Object>(
+				obterListaCamposInvalidos(Motivos, Campos),
+				HttpStatus.BAD_REQUEST);
 
+	}
 
-                        
-                    x.getPropertyPath().forEach(name->{
-                    
-                        
-                        
-                        
-                         InternalControlsReasonExceptions.add(x.getMessage());
-                         InternalControlNameExceptions.add(name.getName());
-                    
-                    
-                    
-                    });
-   
-                    
-                    
-                    });
+	public List<ModelExceptionToConstraintViolated> obterListaCamposInvalidos(List<String> Nome,
+			List<String> Valor) {
 
+		List<ModelExceptionToConstraintViolated> Excecoes = new ArrayList();
 
+		for (int i = 0; i < Nome.size(); i++) {
 
-         
-        
-   
-    	
-    return new ResponseEntity<Object>(obterListaCamposInvalidos(InternalControlNameExceptions,InternalControlsReasonExceptions), HttpStatus.BAD_REQUEST);
+			Excecoes.add(new ModelExceptionToConstraintViolated(Nome.get(i), Valor.get(i),
+					HttpStatus.BAD_REQUEST.value()));
 
-    }
-    
-    
-   
-    public List<ModelExceptionToConstraintViolated> obterListaCamposInvalidos(List<String>p_nome,List<String>p_valor){
-    
-        List<ModelExceptionToConstraintViolated>InternalControlList = new ArrayList();
-        
+		}
 
-        for(int i=0;i<p_nome.size();i++)
-        {
-        
-        InternalControlList.add(new ModelExceptionToConstraintViolated(p_nome.get(i),p_valor.get(i),HttpStatus.BAD_REQUEST.value()));
-        
-        
-        }
-        
-     return InternalControlList;   
-        
-    }
-    
-    
-    
+		return Excecoes;
+
+	}
+
 }

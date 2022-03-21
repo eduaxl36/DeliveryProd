@@ -65,40 +65,23 @@ public class Produtos implements Serializable {
         this.frequencia = frequencia;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + this.id;
-        hash = 83 * hash + Objects.hashCode(this.nome);
-        hash = 83 * hash + Objects.hashCode(this.frequencia);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(frequencia, nome);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Produtos other = (Produtos) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (!Objects.equals(this.nome, other.nome)) {
-            return false;
-        }
-        return Objects.equals(this.frequencia, other.frequencia);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Produtos other = (Produtos) obj;
+		return Objects.equals(frequencia, other.frequencia) && Objects.equals(nome, other.nome);
+	}
 
-    @Override
-    public String toString() {
-        return "Produtos{" + "id=" + id + ", nome=" + nome + ", frequencia=" + frequencia + '}';
-    }
-    
+
     
 }

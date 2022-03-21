@@ -30,8 +30,8 @@ public class Paises implements Serializable  {
     private int id;
     
     @Column(name = "nome")
-    @NotBlank(message="VALOR_INVALIDO_PARA_PAIS")
-    @Length(min=3,max=50,message="TAMANHO_INVALIDO")
+    @NotBlank(message="NOME FORNECIDO PARA PAIS É INVALIDO!")
+    @Length(min=3,max=50,message="TAMANHO FORNECIDO PARA PAIS É INVALIDO")
     private String nome;
     
     @Column(name = "agrupamento")

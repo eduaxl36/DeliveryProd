@@ -93,17 +93,18 @@ public class PaisesServices {
 	 */
 	public Object atualizarPais(int codigo, Paises pais) {
 
-		//Instancia criada pela obtencao do pais pelo ID.
+	
 		Paises PaisCriadoPorGetID = obterPorId(codigo).get();
 		
-		//Optional de pais Criado pela obtenção do nome
+	
 		Optional<Paises> PaisPorNome= obterPaisPorNome(pais.getNome());
 		
-		///Valida se o nome do pais que esta no getID é igual o do pais passado por parametro 
+		
 		boolean validaNomesIguais = PaisCriadoPorGetID.getNome().equals(pais.getNome());
 		
-		//Valida se o pais passado ja se encontra na base dados
+		
 		boolean validaSeNomeEstaNaBase = PaisPorNome.isPresent();
+		
 		
 		if(!validaSeNomeEstaNaBase||validaNomesIguais) {
 			
@@ -122,6 +123,10 @@ public class PaisesServices {
 
 	}
 
+	/**
+	 * Efetua a deleção por codigo
+	 * @param codigo
+	 */
 	public void deletarPais(int codigo) {
 
 		paisRepository.deleteById(codigo);
