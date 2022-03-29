@@ -18,71 +18,71 @@ import javax.persistence.Table;
  */
 @Table(name="justificativas") 
 @Entity
-public class justificativas {
+public class Justificativas {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable=false)  
-    private int Id;
+    private int id;
     
     @Column(name = "descricao")
-    private String Descricao;
+    private String descricao;
     
     @Column(name = "abreviacao")
-    private String Abreviacao;
+    private String abreviacao;
     
     @Column(name = "tipoatraso")
-    private String Tipoatraso;
+    private String tipoatraso;
 
-    public justificativas() {
+    public Justificativas() {
     }
 
-    public justificativas(int Id, String Descricao, String Abreviacao, String Tipoatraso) {
-        this.Id = Id;
-        this.Descricao = Descricao;
-        this.Abreviacao = Abreviacao;
-        this.Tipoatraso = Tipoatraso;
+    public Justificativas(int Id, String Descricao, String Abreviacao, String Tipoatraso) {
+        this.id = Id;
+        this.descricao = Descricao;
+        this.abreviacao = Abreviacao;
+        this.tipoatraso = Tipoatraso;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int Id) {
-        this.Id = Id;
+        this.id = Id;
     }
 
     public String getDescricao() {
-        return Descricao;
+        return descricao;
     }
 
     public void setDescricao(String Descricao) {
-        this.Descricao = Descricao;
+        this.descricao = Descricao;
     }
 
     public String getAbreviacao() {
-        return Abreviacao;
+        return abreviacao;
     }
 
     public void setAbreviacao(String Abreviacao) {
-        this.Abreviacao = Abreviacao;
+        this.abreviacao = Abreviacao;
     }
 
     public String getTipoatraso() {
-        return Tipoatraso;
+        return tipoatraso;
     }
 
     public void setTipoatraso(String Tipoatraso) {
-        this.Tipoatraso = Tipoatraso;
+        this.tipoatraso = Tipoatraso;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + this.Id;
-        hash = 23 * hash + Objects.hashCode(this.Descricao);
-        hash = 23 * hash + Objects.hashCode(this.Abreviacao);
-        hash = 23 * hash + Objects.hashCode(this.Tipoatraso);
+        hash = 23 * hash + this.id;
+        hash = 23 * hash + Objects.hashCode(this.descricao);
+        hash = 23 * hash + Objects.hashCode(this.abreviacao);
+        hash = 23 * hash + Objects.hashCode(this.tipoatraso);
         return hash;
     }
 
@@ -97,22 +97,22 @@ public class justificativas {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final justificativas other = (justificativas) obj;
-        if (this.Id != other.Id) {
+        final Justificativas other = (Justificativas) obj;
+        if (this.id != other.id) {
             return false;
         }
-        if (!Objects.equals(this.Descricao, other.Descricao)) {
+        if (!Objects.equals(this.descricao, other.descricao)) {
             return false;
         }
-        if (!Objects.equals(this.Abreviacao, other.Abreviacao)) {
+        if (!Objects.equals(this.abreviacao, other.abreviacao)) {
             return false;
         }
-        return Objects.equals(this.Tipoatraso, other.Tipoatraso);
+        return Objects.equals(this.tipoatraso, other.tipoatraso);
     }
 
     @Override
     public String toString() {
-        return "justificativas{" + "Id=" + Id + ", Descricao=" + Descricao + ", Abreviacao=" + Abreviacao + ", Tipoatraso=" + Tipoatraso + '}';
+        return "justificativas{" + "Id=" + id + ", Descricao=" + descricao + ", Abreviacao=" + abreviacao + ", Tipoatraso=" + tipoatraso + '}';
     }
     
     

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,10 +34,11 @@ public class ProdutosController {
 
 	}
 	
+	
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Produtos> obterProdutoPorId(@PathVariable int codigo){
 		
-		Optional<Produtos> produtoRetorno = 	ProdutosService.obterPorId(codigo);
+		Optional<Produtos> produtoRetorno = 	ProdutosService.obterProdutoPorId(codigo);
 		return produtoRetorno.isPresent()?ResponseEntity.ok(produtoRetorno.get()):ResponseEntity.notFound().build();
 			
 	}
@@ -50,20 +52,7 @@ public class ProdutosController {
 	
 	}
 	
-	@GetMapping("obterId/{nome}/{frequencia}")
-	public int obterIdProduto(@PathVariable String nome,@PathVariable String frequencia) {
-		
-		return ProdutosService.obterIdProduto(nome, frequencia);
-		
-	}
 	
-	
-	@GetMapping("obterListaNomes/{frequencia}")
-	public List<String> obterIdProduto(@PathVariable String frequencia) {
-		
-		return ProdutosService.obterListaNomesPorFrequencia(frequencia);
-
-	}
 	
 	@PostMapping
 	public ResponseEntity<Object> insereProduto(@RequestBody Produtos Produto){
@@ -74,13 +63,21 @@ public class ProdutosController {
 	
 	
 	@DeleteMapping("/{Id}")
-	public ResponseEntity<Object> insereProduto(@PathVariable int Id){
+	public ResponseEntity<Object> deletaProduto(@PathVariable int Id){
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ProdutosService.deletarProduto(Id));
 		
 	}
 	
 
-
+	@PutMapping("/{Id}")
+	public ResponseEntity<Object> atualizarProduto(@PathVariable int Id,@RequestBody Produtos Produto){
+		
+		return ResponseEntity.ok(ProdutosService.atualizaProduto(Id, Produto));
+		
+	}
+	
+	
+	
 	
 }

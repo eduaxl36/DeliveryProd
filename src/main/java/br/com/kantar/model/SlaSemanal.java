@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.kantar.model;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -23,17 +22,17 @@ import javax.persistence.Table;
  * @author eduardo.fernando
  */
 
-@Table(name="sla_diario") 
+@Table(name="sla_semanal") 
 @Entity
-public class sla_diario {
+public class SlaSemanal {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable=false) 
     private int Id;
     
-    @Column(name = "dataproducao")
-    private LocalDate Dataproducao;
+    @Column(name = "semanaproducao")
+    private int Semanaproducao;
     
     @Column(name = "datasla")
     private LocalDate Datasla;
@@ -44,20 +43,20 @@ public class sla_diario {
     @Column(name = "iddiasemana")
     private int Iddiasemana;
     
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinColumn(name="Pais")
     private Paises Pais;
    
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinColumn(name="Produto")
     private Produtos Produto;
 
-    public sla_diario() {
+    public SlaSemanal() {
     }
 
-    public sla_diario(int Id, LocalDate Dataproducao, LocalDate Datasla, LocalTime Hora, int Iddiasemana, Paises Pais, Produtos Produto) {
+    public SlaSemanal(int Id, int Semanaproducao, LocalDate Datasla, LocalTime Hora, int Iddiasemana, Paises Pais, Produtos Produto) {
         this.Id = Id;
-        this.Dataproducao = Dataproducao;
+        this.Semanaproducao = Semanaproducao;
         this.Datasla = Datasla;
         this.Hora = Hora;
         this.Iddiasemana = Iddiasemana;
@@ -73,12 +72,12 @@ public class sla_diario {
         this.Id = Id;
     }
 
-    public LocalDate getDataproducao() {
-        return Dataproducao;
+    public int getSemanaproducao() {
+        return Semanaproducao;
     }
 
-    public void setDataproducao(LocalDate Dataproducao) {
-        this.Dataproducao = Dataproducao;
+    public void setSemanaproducao(int Semanaproducao) {
+        this.Semanaproducao = Semanaproducao;
     }
 
     public LocalDate getDatasla() {
@@ -122,20 +121,15 @@ public class sla_diario {
     }
 
     @Override
-    public String toString() {
-        return "sla_diario{" + "Id=" + Id + ", Dataproducao=" + Dataproducao + ", Datasla=" + Datasla + ", Hora=" + Hora + ", Iddiasemana=" + Iddiasemana + ", Pais=" + Pais + ", Produto=" + Produto + '}';
-    }
-
-    @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + this.Id;
-        hash = 37 * hash + Objects.hashCode(this.Dataproducao);
-        hash = 37 * hash + Objects.hashCode(this.Datasla);
-        hash = 37 * hash + Objects.hashCode(this.Hora);
-        hash = 37 * hash + this.Iddiasemana;
-        hash = 37 * hash + Objects.hashCode(this.Pais);
-        hash = 37 * hash + Objects.hashCode(this.Produto);
+        int hash = 7;
+        hash = 29 * hash + this.Id;
+        hash = 29 * hash + this.Semanaproducao;
+        hash = 29 * hash + Objects.hashCode(this.Datasla);
+        hash = 29 * hash + Objects.hashCode(this.Hora);
+        hash = 29 * hash + this.Iddiasemana;
+        hash = 29 * hash + Objects.hashCode(this.Pais);
+        hash = 29 * hash + Objects.hashCode(this.Produto);
         return hash;
     }
 
@@ -150,14 +144,14 @@ public class sla_diario {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final sla_diario other = (sla_diario) obj;
+        final SlaSemanal other = (SlaSemanal) obj;
         if (this.Id != other.Id) {
             return false;
         }
-        if (this.Iddiasemana != other.Iddiasemana) {
+        if (this.Semanaproducao != other.Semanaproducao) {
             return false;
         }
-        if (!Objects.equals(this.Dataproducao, other.Dataproducao)) {
+        if (this.Iddiasemana != other.Iddiasemana) {
             return false;
         }
         if (!Objects.equals(this.Datasla, other.Datasla)) {
@@ -171,7 +165,11 @@ public class sla_diario {
         }
         return Objects.equals(this.Produto, other.Produto);
     }
-    
+
+    @Override
+    public String toString() {
+        return "sla_semanal{" + "Id=" + Id + ", Semanaproducao=" + Semanaproducao + ", Datasla=" + Datasla + ", Hora=" + Hora + ", Iddiasemana=" + Iddiasemana + ", Pais=" + Pais + ", Produto=" + Produto + '}';
+    }
     
     
     

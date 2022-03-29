@@ -20,8 +20,8 @@ public class FieldsValidationExceptionHandler extends ResponseEntityExceptionHan
 	@ExceptionHandler(javax.validation.ConstraintViolationException.class)
 	public ResponseEntity<Object> inputValidationException(ConstraintViolationException ExcecaoMensagem) {
 
-		List<String> Motivos = new ArrayList();
-		List<String> Campos = new ArrayList();
+		List<String> Motivos = new ArrayList<String>();
+		List<String> Campos = new ArrayList<String>();
 
 		ExcecaoMensagem.getConstraintViolations().forEach(x -> {
 
@@ -43,7 +43,7 @@ public class FieldsValidationExceptionHandler extends ResponseEntityExceptionHan
 	public List<ModelExceptionToConstraintViolated> obterListaCamposInvalidos(List<String> Nome,
 			List<String> Valor) {
 
-		List<ModelExceptionToConstraintViolated> Excecoes = new ArrayList();
+		List<ModelExceptionToConstraintViolated> Excecoes = new ArrayList<ModelExceptionToConstraintViolated>();
 
 		for (int i = 0; i < Nome.size(); i++) {
 

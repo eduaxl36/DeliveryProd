@@ -24,7 +24,12 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 public class Paises implements Serializable  {
     
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable=false)  
     private int id;

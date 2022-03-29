@@ -27,54 +27,51 @@ private PaisesServices PaisService;
  	
 
 @GetMapping
-public ResponseEntity<List<Paises>> obterTodosPaises(){  
+public ResponseEntity<List<Paises>> obterListaTodosObjetosPaises(){  
 
-List<Paises> list = PaisService.obterTodosPaises();
+List<Paises> Paises = PaisService.obterTodosPaises();
  
-return ResponseEntity.ok().body(list);
+return ResponseEntity.ok().body(Paises);
 
 }
 
-@GetMapping("/{codigo}")
-public ResponseEntity<Paises> obterPaisPorId(@PathVariable int codigo){
+@GetMapping("/{PaisCodigo}")
+public ResponseEntity<Paises> obterPaisPorId(@PathVariable int PaisCodigo){
 	
-	Optional<Paises> paisretorno = 	PaisService.obterPorId(codigo);
+	Optional<Paises> paisretorno = 	PaisService.obterPaisPorId(PaisCodigo);
 	return paisretorno.isPresent()?ResponseEntity.ok(paisretorno.get()):ResponseEntity.notFound().build();
-	
 	
 }
 
-
-@GetMapping("buscaNome/{nome}")
-public ResponseEntity<Paises> obterPaisPorNome(@PathVariable String nome){
+@GetMapping("buscaNome/{PaisNome}")
+public ResponseEntity<Paises> obterPaisPorNome(@PathVariable String PaisNome){
 	
-	Optional<Paises> paisretorno = 	PaisService.obterPaisPorNome(nome);
+	Optional<Paises> paisretorno = 	PaisService.obterPaisPorNome(PaisNome);
 	return paisretorno.isPresent()?ResponseEntity.ok(paisretorno.get()):ResponseEntity.notFound().build();
-	
-	
+		
 }
  
 
 @PostMapping
-public ResponseEntity<Object> inserirPais(@RequestBody Paises pais){
+public ResponseEntity<Object> inserirPais(@RequestBody Paises Pais){
 	
-	return ResponseEntity.status(HttpStatus.CREATED).body(PaisService.inserirPais(pais));
+	return ResponseEntity.status(HttpStatus.CREATED).body(PaisService.inserirPais(Pais));
+	
+}
+
+
+@PutMapping("/{PaisId}")
+public ResponseEntity<Object> atualizarPais(@PathVariable int PaisId,@RequestBody Paises Pais){
+	
+	return ResponseEntity.ok(PaisService.atualizarPais(PaisId, Pais));
 	
 }
 
 
-@PutMapping("/{id}")
-public ResponseEntity<Object> atualizarPais(@PathVariable int id,@RequestBody Paises pais){
+@DeleteMapping("/{PaisId}")
+public void deletarPais(@PathVariable int PaisId){
 	
-	
-	return ResponseEntity.ok(PaisService.atualizarPais(id, pais));
-	
-}
-
-@DeleteMapping("/{id}")
-public void deletarPais(@PathVariable int id){
-	
-	PaisService.deletarPais(id);
+	PaisService.deletarPais(PaisId);
 	
 }
 

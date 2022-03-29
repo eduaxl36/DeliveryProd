@@ -24,7 +24,7 @@ public class ExistValueExceptionHandler extends ResponseEntityExceptionHandler {
      @ExceptionHandler(ExistValueException.class)
      public ResponseEntity<Object> inputValidationException(RuntimeException e) {
          
-     return new ResponseEntity<Object>(new ModelMessage(HttpStatus.CONFLICT.value(),e.getMessage()), HttpStatus.UNAUTHORIZED);
+     return new ResponseEntity<Object>(new ModelMessage(HttpStatus.UNAUTHORIZED.value(),e.getMessage()), HttpStatus.UNAUTHORIZED);
      
      }
 }

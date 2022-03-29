@@ -25,7 +25,7 @@ import javax.persistence.Table;
 
 @Table(name="sla_mensal") 
 @Entity
-public class sla_mensal {
+public class SlaMensal {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +52,10 @@ public class sla_mensal {
     @JoinColumn(name="Produto")
     private Produtos Produto;
 
-    public sla_mensal() {
+    public SlaMensal() {
     }
 
-    public sla_mensal(int Id, int Semanaproducao, LocalDate Datasla, LocalTime Hora, int Iddiasemana, Paises Pais, Produtos Produto) {
+    public SlaMensal(int Id, int Semanaproducao, LocalDate Datasla, LocalTime Hora, int Iddiasemana, Paises Pais, Produtos Produto) {
         this.Id = Id;
         this.Semanaproducao = Semanaproducao;
         this.Datasla = Datasla;
@@ -145,7 +145,7 @@ public class sla_mensal {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final sla_mensal other = (sla_mensal) obj;
+        final SlaMensal other = (SlaMensal) obj;
         if (this.Id != other.Id) {
             return false;
         }

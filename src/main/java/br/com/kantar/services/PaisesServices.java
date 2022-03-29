@@ -3,6 +3,7 @@ package br.com.kantar.services;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,29 +17,34 @@ import br.com.kantar.repositories.PaisesRepository;
 @Service
 public class PaisesServices {
 
-	
 	@Autowired
 	private PaisesRepository paisRepository;
 
-	
-	/**
-	* Retorna a lista de todos os paises
-	* @return Paises
-	*/
+	public boolean isValidoAtualizar(int PaisIdParametro, Paises Pais) {
+
+		Paises PaisId = obterPaisPorId(PaisIdParametro).get();
+		Optional<Paises> PaisNome = obterPaisPorNome(Pais.getNome());
+
+		boolean validaNomesIguais = PaisId.getNome().equals(Pais.getNome());
+		boolean validaSeNomeEstaNaBase = PaisNome.isPresent();
+		boolean validaSeJuncaoIsValida = !validaSeNomeEstaNaBase || validaNomesIguais;
+
+		if (validaSeJuncaoIsValida) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public List<Paises> obterTodosPaises() {
 
 		return paisRepository.findAll();
 
 	}
 
-	/**
-	 * Busca pais por id
-	 * @param p_id
-	 * @return Paises
-	 */
-	public Optional<Paises> obterPorId(int p_id) {
+	public Optional<Paises> obterPaisPorId(int PaisId) {
 
-		Optional<Paises> Pais = paisRepository.findById(p_id);
+		Optional<Paises> Pais = paisRepository.findById(PaisId);
 
 		if (!Pais.isPresent()) {
 
@@ -46,27 +52,16 @@ public class PaisesServices {
 
 		}
 
-		return paisRepository.findById(p_id);
+		return paisRepository.findById(PaisId);
 
 	}
 
-	/**
-	 * retorna optional de pais por nome
-	 * @param nome
-	 * @return Optional<Paises>
-	 */
 	public Optional<Paises> obterPaisPorNome(String nome) {
 
 		return paisRepository.findBynome(nome);
 
 	}
 
-	
-	/**
-	 * Adiciona uma pais a base de dados
-	 * @param pais
-	 * @return Object(msg de personalizada de sucesso ou erro)
-	 */
 	public Object inserirPais(Paises pais) {
 
 		Optional<Paises> VarPaisInternalScope = obterPaisPorNome(pais.getNome());
@@ -74,8 +69,7 @@ public class PaisesServices {
 		if (VarPaisInternalScope.isPresent()) {
 
 			throw new ExistValueException(
-					"O pais mencionado ja encontra-se na base dados, verifique os dados e digite novamente.");
-			
+					"FALHA NA INSERÇÃO : O pais mencionado ja encontra-se na base dados, verifique os dados e digite novamente.");
 		}
 
 		paisRepository.save(pais);
@@ -84,49 +78,24 @@ public class PaisesServices {
 
 	}
 
-	
-	/**
-	 * Atualiza um pais escolhido
-	 * @param codigo
-	 * @param pais
-	 * @return Object(msg de personalizada de sucesso ou erro)
-	 */
-	public Object atualizarPais(int codigo, Paises pais) {
+	public Object atualizarPais(int Id, Paises Pais) {
 
-	
-		Paises PaisCriadoPorGetID = obterPorId(codigo).get();
-		
-	
-		Optional<Paises> PaisPorNome= obterPaisPorNome(pais.getNome());
-		
-		
-		boolean validaNomesIguais = PaisCriadoPorGetID.getNome().equals(pais.getNome());
-		
-		
-		boolean validaSeNomeEstaNaBase = PaisPorNome.isPresent();
-		
-		
-		if(!validaSeNomeEstaNaBase||validaNomesIguais) {
-			
-			BeanUtils.copyProperties(pais, PaisCriadoPorGetID, "id");
-			paisRepository.save(PaisCriadoPorGetID);
+		if (isValidoAtualizar(Id, Pais)) {
+
+			Paises PaisId = obterPaisPorId(Id).get();
+			BeanUtils.copyProperties(Pais, PaisId, "id");
+			paisRepository.save(PaisId);
 			return new ModelMessage(200, "Dados atualizados com sucesso!");
 
-		}
-		else {
-			
-			throw new ExistValueException(
-					"O pais mencionado ja encontra-se na base dados, verifique os dados e digite novamente.");			
-		}
+		} else {
 
-			
+			throw new ExistValueException(
+					"FALHA NA ATUALIZAÇÃO : --> O pais mencionado ja encontra-se na base dados, verifique os dados e digite novamente.");
+
+		}
 
 	}
 
-	/**
-	 * Efetua a deleção por codigo
-	 * @param codigo
-	 */
 	public void deletarPais(int codigo) {
 
 		paisRepository.deleteById(codigo);

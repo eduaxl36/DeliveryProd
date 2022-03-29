@@ -12,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
 
 /**
  *
@@ -21,15 +24,25 @@ import javax.persistence.Table;
 @Entity
 public class Produtos implements Serializable {
     
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable=false)  
     private int id;
     
+	
     @Column(name = "nome")
+    @NotBlank(message="NOME FORNECIDO PARA PRODUTO É INVALIDO!")
+    @Length(min=3,max=50,message="TAMANHO FORNECIDO PARA PRODUTO É INVALIDO")
     private String nome;
     
     @Column(name = "frequencia")
+    @NotBlank(message="DEFINIÇÃO INVALIDA PARA FREQUENCIA!")
+    @Length(min=3,max=100,message="TAMANHO FORNECIDO PARA FREQUENCIA É INVALIDO")
     private String frequencia;
 
     public Produtos() {
