@@ -12,6 +12,6 @@ public interface JustificativasRepository extends JpaRepository<Justificativas, 
 
 	
 	Optional<Justificativas>findByAbreviacao(String JustificativaAbreviacao);
-	
+	Optional<Justificativas>findByDescricao(String JustificativaDescricao);
 	
 }

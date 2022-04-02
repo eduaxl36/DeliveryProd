@@ -2,8 +2,10 @@ package br.com.kantar.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import br.com.kantar.exception.NotFoundException;
 import br.com.kantar.model.Paises;
 import br.com.kantar.modelMessage.ModelMessage;
 import br.com.kantar.repositories.PaisesRepository;
+import br.com.kantar.shared.paises.PaisDTOUtil;
+import br.com.kantar.shared.paises.PaisesDTO;
 
 @Service
 public class PaisesServices {
@@ -20,85 +24,125 @@ public class PaisesServices {
 	@Autowired
 	private PaisesRepository paisRepository;
 
-	public boolean isValidoAtualizar(int PaisIdParametro, Paises Pais) {
+	public List<PaisesDTO> obterTodosPaises() {
 
-		Paises PaisId = obterPaisPorId(PaisIdParametro).get();
-		Optional<Paises> PaisNome = obterPaisPorNome(Pais.getNome());
+		List<Paises> Paises = paisRepository.findAll();
 
-		boolean validaNomesIguais = PaisId.getNome().equals(Pais.getNome());
-		boolean validaSeNomeEstaNaBase = PaisNome.isPresent();
-		boolean validaSeJuncaoIsValida = !validaSeNomeEstaNaBase || validaNomesIguais;
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-		if (validaSeJuncaoIsValida) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public List<Paises> obterTodosPaises() {
-
-		return paisRepository.findAll();
+		return Paises.stream().map(pais -> mapper.map(pais, PaisesDTO.class)).collect(Collectors.toList());
 
 	}
 
-	public Optional<Paises> obterPaisPorId(int PaisId) {
+	public boolean verificaSeNomeEstaNaBase(PaisesDTO PaisDTO) {
 
-		Optional<Paises> Pais = paisRepository.findById(PaisId);
-
-		if (!Pais.isPresent()) {
-
-			throw new NotFoundException("O id informado é invalido!!");
-
-		}
-
-		return paisRepository.findById(PaisId);
+		return paisRepository.findAll().stream()
+				.anyMatch(pais -> pais.getNome().toLowerCase().equals(PaisDTO.getNome().toLowerCase()));
 
 	}
 
-	public Optional<Paises> obterPaisPorNome(String nome) {
+	public boolean verificaSeIdEstaNaBase(int PaisId) {
 
-		return paisRepository.findBynome(nome);
+		return paisRepository.findAll().stream().anyMatch(pais -> pais.getId() == PaisId);
+	}
+
+	public boolean verificaSePaisInserivel(PaisesDTO Pais) {
+
+		// verifica se o nome não esta base, permite atualizar
+		boolean ValidaSeNomeEstaNaBase = !verificaSeNomeEstaNaBase(Pais);
+
+		System.out.println(Pais.getNome().toLowerCase() + " - " + ValidaSeNomeEstaNaBase);
+
+		if (!ValidaSeNomeEstaNaBase)
+			throw new ExistValueException("FALHA DE INSERÇÃO: O NOME para o PAIS Fornecido ja encontra-se cadastrado");
+
+		return true;
 
 	}
 
-	public Object inserirPais(Paises pais) {
+	public boolean verificaSePaisAtualizavel(int PaisDTOId, PaisesDTO PaisParametro) {
 
-		Optional<Paises> VarPaisInternalScope = obterPaisPorNome(pais.getNome());
+		Optional<PaisesDTO> Pais = obterPaisPorId(PaisDTOId);
 
-		if (VarPaisInternalScope.isPresent()) {
+		// verifica se o nome não esta base permite atualizar
+		boolean ValidaSeNomeEstaNaBase = !verificaSeNomeEstaNaBase(PaisParametro);
 
+		/// se existir id, permite atualizar
+		boolean validaSeIdExiste = verificaSeIdEstaNaBase(PaisDTOId);
+
+		/// se os nomes forem iguais, permite atualizar
+		boolean validaSeNomeIgualParametro = PaisParametro.getNome().equals(Pais.get().getNome());
+
+		boolean PermiteInsercao = (validaSeIdExiste && validaSeNomeIgualParametro) || ValidaSeNomeEstaNaBase;
+
+		if (!PermiteInsercao)
 			throw new ExistValueException(
-					"FALHA NA INSERÇÃO : O pais mencionado ja encontra-se na base dados, verifique os dados e digite novamente.");
-		}
+					"FALHA DE ATUALIZAÇÃO: O NOME para o PAIS Fornecido ja encontra-se cadastrado");
 
-		paisRepository.save(pais);
-
-		return new ModelMessage(200, "Dados inseridos com sucesso!");
+		return true;
 
 	}
 
-	public Object atualizarPais(int Id, Paises Pais) {
+	public Optional<PaisesDTO> obterPaisPorId(int PaisIdDTO) {
 
-		if (isValidoAtualizar(Id, Pais)) {
+		Optional<Paises> Pais = paisRepository.findById(PaisIdDTO);
 
-			Paises PaisId = obterPaisPorId(Id).get();
-			BeanUtils.copyProperties(Pais, PaisId, "id");
-			paisRepository.save(PaisId);
-			return new ModelMessage(200, "Dados atualizados com sucesso!");
+		Pais.orElseThrow(() -> new NotFoundException("FALHA NA OBTENÇÃO: --> O ID fornecido para o PAIS é invalido."));
 
-		} else {
+		PaisesDTO PaisDTO = PaisDTOUtil.PaisDTOConversion(Pais.get());
 
-			throw new ExistValueException(
-					"FALHA NA ATUALIZAÇÃO : --> O pais mencionado ja encontra-se na base dados, verifique os dados e digite novamente.");
+		Optional<PaisesDTO> OptPaisDTO = Optional.ofNullable(PaisDTO);
 
-		}
+		return OptPaisDTO;
 
 	}
 
-	public void deletarPais(int codigo) {
+	public Optional<PaisesDTO> obterPaisPorNome(String nome) {
 
-		paisRepository.deleteById(codigo);
+		Optional<Paises> Pais = paisRepository.findBynome(nome);
+
+		Pais.orElseThrow(() -> new NotFoundException(
+				"FALHA NA OBTENÇÃO: O NOME fornecido para o PAIS não retornou nenhum resultado, verifique os dados e digite novamente."));
+
+		PaisesDTO paisDTO = PaisDTOUtil.PaisDTOConversion(Pais.get());
+
+		Optional<PaisesDTO> OptPaisesDTO = Optional.ofNullable(paisDTO);
+
+		return OptPaisesDTO;
+
+	}
+
+	public Object inserirPais(PaisesDTO PaisParam) {
+
+		verificaSePaisInserivel(PaisParam);
+
+		Paises Pais = PaisDTOUtil.PaisObjConversion(PaisParam);
+
+		paisRepository.save(Pais);
+
+		return new ModelMessage(201, "PAIS inserido com sucesso!");
+
+	}
+
+	public Object deletarPais(int PaisId) {
+		Optional<PaisesDTO> Pais = obterPaisPorId(PaisId);
+		Pais.orElseThrow(() -> new NotFoundException(
+				"FALHA NA DELEÇÃO : O Codigo do Pais informado não existe, verfique as informações e digite novamente."));
+		paisRepository.deleteById(PaisId);
+		return new ModelMessage(200, "PAIS deletado com sucesso.");
+
+	}
+
+	public Object atualizarPais(int PaisIdParam, PaisesDTO Pais) {
+
+		PaisesDTO PaisId = obterPaisPorId(PaisIdParam).get();
+
+		verificaSePaisAtualizavel(PaisIdParam, Pais);
+
+		BeanUtils.copyProperties(Pais, PaisId, "id");
+		paisRepository.save(PaisDTOUtil.PaisObjConversion(PaisId));
+		return new ModelMessage(200, "Dados atualizados com sucesso!");
 
 	}
 

@@ -1,6 +1,6 @@
 package br.com.kantar.controller;
 
-import java.util.List;
+import java.util.*;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import br.com.kantar.model.Produtos;
 import br.com.kantar.services.ProdutosServices;
+import br.com.kantar.shared.produtos.ProdutosDTO;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -26,19 +26,19 @@ public class ProdutosController {
 	private ProdutosServices ProdutosService;
 	
 	@GetMapping
-	public ResponseEntity<List<Produtos>> obterTodosProdutos(){  
+	public ResponseEntity<List<ProdutosDTO>> obterTodosProdutos(){  
 
-	List<Produtos> list = ProdutosService.obterTodosProdutos();
+	List<ProdutosDTO> ProdutosDTO = ProdutosService.obterTodosProdutos();
 	 
-	return ResponseEntity.ok().body(list);
+	return ResponseEntity.ok().body(ProdutosDTO);
 
 	}
 	
 	
 	@GetMapping("/{codigo}")
-	public ResponseEntity<Produtos> obterProdutoPorId(@PathVariable int codigo){
+	public ResponseEntity<ProdutosDTO> obterProdutoPorId(@PathVariable int codigo){
 		
-		Optional<Produtos> produtoRetorno = 	ProdutosService.obterProdutoPorId(codigo);
+		Optional<ProdutosDTO> produtoRetorno = ProdutosService.obterProdutoPorId(codigo);
 		return produtoRetorno.isPresent()?ResponseEntity.ok(produtoRetorno.get()):ResponseEntity.notFound().build();
 			
 	}
@@ -47,15 +47,14 @@ public class ProdutosController {
 	@GetMapping("nome/{nome}")
 	public List<Optional<Produtos>> obterProdutoPorNome(@PathVariable String nome){
 		
-		List<Optional<Produtos>> produtoRetorno = 	ProdutosService.obterProdutosPorNome(nome);
+		List<Optional<Produtos>> produtoRetorno = ProdutosService.obterProdutosPorNome(nome);
 		return produtoRetorno;	
 	
 	}
 	
 	
-	
 	@PostMapping
-	public ResponseEntity<Object> insereProduto(@RequestBody Produtos Produto){
+	public ResponseEntity<Object> insereProduto(@RequestBody ProdutosDTO Produto){
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ProdutosService.insereProduto(Produto));
 		
@@ -71,9 +70,9 @@ public class ProdutosController {
 	
 
 	@PutMapping("/{Id}")
-	public ResponseEntity<Object> atualizarProduto(@PathVariable int Id,@RequestBody Produtos Produto){
+	public ResponseEntity<Object> atualizarProduto(@PathVariable int Id,@RequestBody ProdutosDTO Produto){
 		
-		return ResponseEntity.ok(ProdutosService.atualizaProduto(Id, Produto));
+		return ResponseEntity.ok(ProdutosService.atualizarProduto(Id, Produto));
 		
 	}
 	
