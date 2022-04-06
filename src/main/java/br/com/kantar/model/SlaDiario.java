@@ -30,148 +30,117 @@ public class SlaDiario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable=false) 
-    private int Id;
+    private int id;
     
     @Column(name = "dataproducao")
-    private LocalDate Dataproducao;
+    private LocalDate dataproducao;
     
     @Column(name = "datasla")
-    private LocalDate Datasla;
+    private LocalDate datasla;
     
     @Column(name = "hora")
-    private LocalTime Hora;
+    private LocalTime hora;
     
     @Column(name = "iddiasemana")
-    private int Iddiasemana;
+    private int iddiasemana;
     
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinColumn(name="Pais")
-    private Paises Pais;
+    private Paises pais;
    
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinColumn(name="Produto")
-    private Produtos Produto;
+    private Produtos produto;
 
     public SlaDiario() {
     }
 
-    public SlaDiario(int Id, LocalDate Dataproducao, LocalDate Datasla, LocalTime Hora, int Iddiasemana, Paises Pais, Produtos Produto) {
-        this.Id = Id;
-        this.Dataproducao = Dataproducao;
-        this.Datasla = Datasla;
-        this.Hora = Hora;
-        this.Iddiasemana = Iddiasemana;
-        this.Pais = Pais;
-        this.Produto = Produto;
-    }
+	public SlaDiario(int id, LocalDate dataproducao, LocalDate datasla, LocalTime hora, int iddiasemana, Paises pais,
+			Produtos produto) {
+		super();
+		this.id = id;
+		this.dataproducao = dataproducao;
+		this.datasla = datasla;
+		this.hora = hora;
+		this.iddiasemana = iddiasemana;
+		this.pais = pais;
+		this.produto = produto;
+	}
 
-    public int getId() {
-        return Id;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(dataproducao, datasla, hora, iddiasemana, pais, produto);
+	}
 
-    public void setId(int Id) {
-        this.Id = Id;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SlaDiario other = (SlaDiario) obj;
+		return Objects.equals(dataproducao, other.dataproducao) && Objects.equals(datasla, other.datasla)
+				&& Objects.equals(hora, other.hora) && iddiasemana == other.iddiasemana
+				&& Objects.equals(pais, other.pais) && Objects.equals(produto, other.produto);
+	}
 
-    public LocalDate getDataproducao() {
-        return Dataproducao;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setDataproducao(LocalDate Dataproducao) {
-        this.Dataproducao = Dataproducao;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public LocalDate getDatasla() {
-        return Datasla;
-    }
+	public LocalDate getDataproducao() {
+		return dataproducao;
+	}
 
-    public void setDatasla(LocalDate Datasla) {
-        this.Datasla = Datasla;
-    }
+	public void setDataproducao(LocalDate dataproducao) {
+		this.dataproducao = dataproducao;
+	}
 
-    public LocalTime getHora() {
-        return Hora;
-    }
+	public LocalDate getDatasla() {
+		return datasla;
+	}
 
-    public void setHora(LocalTime Hora) {
-        this.Hora = Hora;
-    }
+	public void setDatasla(LocalDate datasla) {
+		this.datasla = datasla;
+	}
 
-    public int getIddiasemana() {
-        return Iddiasemana;
-    }
+	public LocalTime getHora() {
+		return hora;
+	}
 
-    public void setIddiasemana(int Iddiasemana) {
-        this.Iddiasemana = Iddiasemana;
-    }
+	public void setHora(LocalTime hora) {
+		this.hora = hora;
+	}
 
-    public Paises getPais() {
-        return Pais;
-    }
+	public int getIddiasemana() {
+		return iddiasemana;
+	}
 
-    public void setPais(Paises Pais) {
-        this.Pais = Pais;
-    }
+	public void setIddiasemana(int iddiasemana) {
+		this.iddiasemana = iddiasemana;
+	}
 
-    public Produtos getProduto() {
-        return Produto;
-    }
+	public Paises getPais() {
+		return pais;
+	}
 
-    public void setProduto(Produtos Produto) {
-        this.Produto = Produto;
-    }
+	public void setPais(Paises pais) {
+		this.pais = pais;
+	}
 
-    @Override
-    public String toString() {
-        return "sla_diario{" + "Id=" + Id + ", Dataproducao=" + Dataproducao + ", Datasla=" + Datasla + ", Hora=" + Hora + ", Iddiasemana=" + Iddiasemana + ", Pais=" + Pais + ", Produto=" + Produto + '}';
-    }
+	public Produtos getProduto() {
+		return produto;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + this.Id;
-        hash = 37 * hash + Objects.hashCode(this.Dataproducao);
-        hash = 37 * hash + Objects.hashCode(this.Datasla);
-        hash = 37 * hash + Objects.hashCode(this.Hora);
-        hash = 37 * hash + this.Iddiasemana;
-        hash = 37 * hash + Objects.hashCode(this.Pais);
-        hash = 37 * hash + Objects.hashCode(this.Produto);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final SlaDiario other = (SlaDiario) obj;
-        if (this.Id != other.Id) {
-            return false;
-        }
-        if (this.Iddiasemana != other.Iddiasemana) {
-            return false;
-        }
-        if (!Objects.equals(this.Dataproducao, other.Dataproducao)) {
-            return false;
-        }
-        if (!Objects.equals(this.Datasla, other.Datasla)) {
-            return false;
-        }
-        if (!Objects.equals(this.Hora, other.Hora)) {
-            return false;
-        }
-        if (!Objects.equals(this.Pais, other.Pais)) {
-            return false;
-        }
-        return Objects.equals(this.Produto, other.Produto);
-    }
-    
+	public void setProduto(Produtos produto) {
+		this.produto = produto;
+	}
     
     
     
