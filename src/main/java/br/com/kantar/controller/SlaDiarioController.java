@@ -3,8 +3,6 @@ package br.com.kantar.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +14,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import br.com.kantar.model.SlaDiario;
 import br.com.kantar.services.SlaDiarioServices;
-import br.com.kantar.shared.paises.PaisesDTO;
+import br.com.kantar.shared.SlaDiario.SlaDiarioDTO;
+
 
 
 @RestController
@@ -31,29 +28,28 @@ public class SlaDiarioController {
 	
 
 	@GetMapping
-	public List<SlaDiario> obterTodosSlas(){
+	public List<SlaDiarioDTO> obterTodosSlas(){
 		
 		
 		return slaDiarioService.ObterTodosSlas();
 		
 	}
 	
-
 	
-	@GetMapping("obterMesPorNome/{PaisNome}/{Ano}/{Mes}")
-	public List<SlaDiario> obterSlaPorPaisNomeMes(@PathVariable String PaisNome,@PathVariable int Mes,@PathVariable int Ano) {
+	@GetMapping("obterMesPorNOMEMES/{PaisNome}/{Ano}/{Mes}")
+	public List<SlaDiarioDTO> obterSlaPorPaisNomeMes(@PathVariable String PaisNome,@PathVariable int Mes,@PathVariable int Ano) {
 		
-		List<SlaDiario> slasDiarios = 	slaDiarioService.obterSlaPorRangeMes(PaisNome, Ano,Mes);
+		List<SlaDiarioDTO> slasDiarios = 	slaDiarioService.obterSlaPorRangeMes(PaisNome, Ano,Mes);
 		
 		return slasDiarios;
 		
 	}
 
 	
-	@GetMapping("obterPorPaisAnoMes/{PaisId}/{Ano}/{Mes}")
-	public List<SlaDiario> obterSlaPorPaisIdMes(@PathVariable int PaisId,@PathVariable int Mes,@PathVariable int Ano) {
+	@GetMapping("obterMesPorIDANO/{PaisId}/{Ano}/{Mes}")
+	public List<SlaDiarioDTO> obterSlaPorPaisIdMes(@PathVariable int PaisId,@PathVariable int Mes,@PathVariable int Ano) {
 		
-		List<SlaDiario> slasDiarios = 	slaDiarioService.obterSlaPorRangeMes(PaisId, Ano,Mes);
+		List<SlaDiarioDTO> slasDiarios = 	slaDiarioService.obterSlaPorRangeMes(PaisId, Ano,Mes);
 		
 		return slasDiarios;
 		
@@ -62,7 +58,7 @@ public class SlaDiarioController {
 	
 	
 	@GetMapping("teste/{PaisId}/{DataInicial}/{DataFinal}/{ProdutoId}")
-	public List<SlaDiario> obterSlaPorRangeDatas(@PathVariable  int PaisId,@PathVariable  String DataInicial,@PathVariable  String DataFinal,@PathVariable  int ProdutoId) {
+	public List<SlaDiarioDTO> obterSlaPorRangeDatas(@PathVariable  int PaisId,@PathVariable  String DataInicial,@PathVariable  String DataFinal,@PathVariable  int ProdutoId) {
 		
 
 		return slaDiarioService.obterSlaPorRangeDatas(PaisId,LocalDate.parse(DataInicial),LocalDate.parse(DataFinal),ProdutoId);
@@ -71,16 +67,17 @@ public class SlaDiarioController {
 
 	
 	@GetMapping("teste1/{PaisNome}/{DataInicial}/{DataFinal}/{ProdutoNome}")
-	public List<SlaDiario> obterSlaPorRangeDatas(@PathVariable  String PaisNome,@PathVariable  String DataInicial,@PathVariable  String DataFinal,@PathVariable  String ProdutoNome) {
+	public List<SlaDiarioDTO> obterSlaPorRangeDatas(@PathVariable  String PaisNome,@PathVariable  String DataInicial,@PathVariable  String DataFinal,@PathVariable  String ProdutoNome) {
 		
 	
 		return slaDiarioService.obterSlaPorRangeDatas(PaisNome,LocalDate.parse(DataInicial),LocalDate.parse(DataFinal),ProdutoNome);
 		
 	}	
 	
+
 	
 	@PostMapping
-	public ResponseEntity<Object> insereSlaDiario(@RequestBody SlaDiario slaDiario){
+	public ResponseEntity<Object> insereSlaDiario(@RequestBody SlaDiarioDTO slaDiario){
 		
 		return ResponseEntity.ok(slaDiarioService.inserirSla(slaDiario));
 		
@@ -89,7 +86,7 @@ public class SlaDiarioController {
 	
 	
 	@PutMapping("/{SlaDiarioId}")
-	public ResponseEntity<Object> atualizarSla(@PathVariable int SlaDiarioId,@RequestBody SlaDiario slaDiario){
+	public ResponseEntity<Object> atualizarSla(@PathVariable int SlaDiarioId,@RequestBody SlaDiarioDTO slaDiario){
 		
 		return ResponseEntity.ok(slaDiarioService.atualizaSla(SlaDiarioId, slaDiario));
 		

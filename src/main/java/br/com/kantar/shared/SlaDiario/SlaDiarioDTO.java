@@ -1,66 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package br.com.kantar.model;
+package br.com.kantar.shared.SlaDiario;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import br.com.kantar.model.Paises;
+import br.com.kantar.model.Produtos;
 
-/**
- *
- * @author eduardo.fernando
- */
+public class SlaDiarioDTO {
 
-@Table(name="sla_diario") 
-@Entity
-public class SlaDiario {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id",nullable=false) 
+
     private int id;
     
- 
-    @NotNull(message="O campo data de produção não aceita valores nulos.")
-    @Column(name = "dataproducao")
+
     private LocalDate dataproducao;
     
-    @NotNull(message="O campo data sla não aceita valores nulos.")
-    @Column(name = "datasla")
+
     private LocalDate datasla;
     
-    @NotNull(message="O campo hora não aceita valores nulos.")
-    @Column(name = "hora")
+
     private LocalTime hora;
     
-    @Column(name = "iddiasemana")
+
     private int iddiasemana;
     
-    @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-    @JoinColumn(name="Pais")
+
     private Paises pais;
    
-    @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-    @JoinColumn(name="Produto")
+
     private Produtos produto;
 
-    public SlaDiario() {
-    }
 
-	public SlaDiario(int id, LocalDate dataproducao, LocalDate datasla, LocalTime hora, int iddiasemana, Paises pais,
+	public SlaDiarioDTO() {
+		super();
+	}
+
+
+	public SlaDiarioDTO(int id, LocalDate dataproducao, LocalDate datasla, LocalTime hora, int iddiasemana, Paises pais,
 			Produtos produto) {
 		super();
 		this.id = id;
@@ -72,10 +47,12 @@ public class SlaDiario {
 		this.produto = produto;
 	}
 
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(dataproducao, datasla, hora, iddiasemana, pais, produto);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -85,72 +62,91 @@ public class SlaDiario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SlaDiario other = (SlaDiario) obj;
+		SlaDiarioDTO other = (SlaDiarioDTO) obj;
 		return Objects.equals(dataproducao, other.dataproducao) && Objects.equals(datasla, other.datasla)
 				&& Objects.equals(hora, other.hora) && iddiasemana == other.iddiasemana
 				&& Objects.equals(pais, other.pais) && Objects.equals(produto, other.produto);
 	}
 
+
+	@Override
+	public String toString() {
+		return "SlaDiarioDTO [id=" + id + ", dataproducao=" + dataproducao + ", datasla=" + datasla + ", hora=" + hora
+				+ ", iddiasemana=" + iddiasemana + ", pais=" + pais + ", produto=" + produto + "]";
+	}
+
+
 	public int getId() {
 		return id;
 	}
+
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
+
 	public LocalDate getDataproducao() {
 		return dataproducao;
 	}
+
 
 	public void setDataproducao(LocalDate dataproducao) {
 		this.dataproducao = dataproducao;
 	}
 
+
 	public LocalDate getDatasla() {
 		return datasla;
 	}
+
 
 	public void setDatasla(LocalDate datasla) {
 		this.datasla = datasla;
 	}
 
+
 	public LocalTime getHora() {
 		return hora;
 	}
+
 
 	public void setHora(LocalTime hora) {
 		this.hora = hora;
 	}
 
+
 	public int getIddiasemana() {
 		return iddiasemana;
 	}
+
 
 	public void setIddiasemana(int iddiasemana) {
 		this.iddiasemana = iddiasemana;
 	}
 
+
 	public Paises getPais() {
 		return pais;
 	}
+
 
 	public void setPais(Paises pais) {
 		this.pais = pais;
 	}
 
+
 	public Produtos getProduto() {
 		return produto;
 	}
 
+
 	public void setProduto(Produtos produto) {
 		this.produto = produto;
 	}
+	
+	
     
     
-    
-    
-    
-    
-    
+	
 }
